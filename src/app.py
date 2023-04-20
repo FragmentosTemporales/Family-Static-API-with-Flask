@@ -1,6 +1,3 @@
-"""
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
-"""
 import os
 from flask import Flask, request, jsonify, url_for
 from flask_cors import CORS
@@ -44,31 +41,6 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/members', methods=['GET'])
-def handle_hello():
-
-    members = jackson_family.get_all_members()
-    response_body = members
-
-    return jsonify(response_body), 200
-
-
-@app.route('/member/<int:id>', methods=['GET'])
-def handle_member(id):
-
-    member = jackson_family.get_member(id)
-    if member is None:
-        raise APIException("Member not found", status_code=404)
-
-    response_body = {
-        "id": member["id"],
-        "first_name": member["first_name"],
-        "age": member["age"],
-        "lucky_numbers": member["lucky_numbers"]
-    }
-
-    return jsonify(response_body), 200
-
 
 @app.route('/member', methods=['POST'])
 def handle_new_member():
@@ -93,10 +65,33 @@ def handle_new_member():
 
     return jsonify(response_body), 200
 
+@app.route('/members', methods=['GET'])
+def handle_hello():
+
+    members = jackson_family.get_all_members()
+    response_body = members
+
+    return jsonify(response_body), 200
+
+
+@app.route('/member/<int:id>', methods=['GET'])
+def get_member(id):
+    member = jackson_family.get_member(id)
+    if member is None:
+        raise APIException("Member not found", status_code=404)
+
+    return jsonify(member), 200
+
+
+
 @app.route('/member/<int:id>', methods=['DELETE'])
 def handle_delete_member(id):
-    Family.delete_member(id)
+    deleted = jackson_family.delete_member(id)
+    if not deleted:
+        raise APIException("Member not found", status_code=404)
     return jsonify({"msg": "Member deleted successfully"}), 200
+
+
 
 @app.errorhandler(APIException)
 def handle_api_exception(error):
