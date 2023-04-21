@@ -12,23 +12,17 @@ CORS(app)
 # create the jackson family object
 jackson_family = FamilyStructure("Jackson")
 jackson_family.add_member({
-    "id": jackson_family._generateId(),
     "first_name": "John",
-    "last_name": "Jackson",
     "age": 33,
     "lucky_numbers": [7, 13, 22]
 })
 jackson_family.add_member({
-    "id": jackson_family._generateId(),
     "first_name": "Jane",
-    "last_name": "Jackson",
     "age": 35,
     "lucky_numbers": [10, 14, 3]
 })
 jackson_family.add_member({
-    "id": jackson_family._generateId(),
     "first_name": "Jimmy",
-    "last_name": "Jackson",
     "age": 5,
     "lucky_numbers": [1]
 })
